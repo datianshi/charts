@@ -1018,6 +1018,13 @@ serverFiles:
           - source_labels: [__meta_kubernetes_service_name]
             target_label: kubernetes_name
 
+      - job_name: 'cf-firehose'
+        basic_auth:
+          username: admin
+          password: admin
+        static_configs:
+        - targets: ['firehose-exporter-service.prometheus.svc.cluster.local:80']
+
       # Example scrape config for pods
       #
       # The relabeling allows the actual pod scrape endpoint to be configured via the

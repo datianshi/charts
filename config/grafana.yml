@@ -1,0 +1,45 @@
+adminPassword: test123
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nsx
+  path: /*
+  enabled: true
+  hosts:
+    - grafana.nsx-t.pks.com
+  tls:
+    - secretName: grafana-server-tls
+      hosts:
+        - grafana.nsx-t.pks.com
+persistence:
+  storageClassName: fast
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-server.prometheus.svc.cluster.local
+      access: proxy
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'kubernetes'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/kubernetes
+    - name: 'cf-kpis'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/cf-kpis
+dashboardsConfigMaps:
+  kubernetes: kube-dashboard
+  cf-kpis: cf-kpis-dashboard

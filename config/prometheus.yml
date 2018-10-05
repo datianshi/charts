@@ -1,0 +1,37 @@
+server:
+  persistentVolume:
+    storageClass: fast
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nsx
+    hosts:
+      - prometheus.nsx-t.pks.com
+    tls:
+      - secretName: prometheus-server-tls
+        hosts:
+          - prometheus.nsx-t.pks.com
+pushgateway:
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nsx
+    enabled: true
+    hosts:
+      - pushgateway.nsx-t.pks.com
+    tls:
+      - secretName: pushgateway-server-tls
+        hosts:
+          - pushgateway.nsx-t.pks.com
+alertmanager:
+  persistentVolume:
+    storageClass: fast
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nsx
+    enabled: true
+    hosts:
+      - alertmanager.nsx-t.pks.com
+    tls:
+      - secretName: alertmanager-server-tls
+        hosts:
+          - alertmanager.nsx-t.pks.com

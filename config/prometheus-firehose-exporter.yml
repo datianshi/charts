@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firehose-exporter-service
+  namespace: prometheus
+  labels:
+    app: firehose-exporter
+spec:
+  ports:
+  - port: 80
+    targetPort: 9000
+    protocol: TCP
+    name: http
+  selector:
+    app: firehose-exporter
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-firehose-exporter
+  namespace: prometheus
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: firehose-exporter
+    spec:
+      containers:
+      - name: web
+        image: datianshi/prometheus-firehose-exporter
+        command: ["/bin/firehose_exporter"]
+        args:
+        - "--uaa.url"
+        - "https://uaa.pas.nsx-t.shaozhenpcf.com"
+        - "--uaa.client-id"
+        - "prometheus-firehose"
+        - "--uaa.client-secret"
+        - "prometheus-client-secret"
+        - "--doppler.url"
+        - "wss://doppler.pas.nsx-t.shaozhenpcf.com:443"
+        - "--metrics.environment"
+        - "test"
+        - "--skip-ssl-verify"
+        - "--web.listen-address"
+        - ":9000"
+        - "--web.auth.username"
+        - "admin"
+        - "--web.auth.password"
+        - "admin"
